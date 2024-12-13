@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using ProyectoFinal.Models;
+using ProyectoFinal.Models.DTO;
 using ProyectoFinal.Services;
 
 namespace ProyectoFinal.Controllers;
@@ -15,10 +16,10 @@ public class ProyectoController : Controller
         _proyectoService = proyectoService;
     }
 
-    [HttpGet(Name = "GetAllProyectos")]
-    public IEnumerable<Proyecto> ObtenerTodos()
+    [HttpGet("GetAllProyectos")]
+    public IEnumerable<Proyecto> ObtenerTodosLosAprobados()
     {
-        var proyectos = _proyectoService.ObtenerTodos();
+        var proyectos = _proyectoService.ObtenerTodosAprobados();
         return proyectos;
     }
 
@@ -31,19 +32,19 @@ public class ProyectoController : Controller
         return Ok(proyecto);
     }
 
-    [HttpPost]
-    public IActionResult CrearProyecto([FromBody] Proyecto proyecto)
+    [HttpPost("subir")]
+    public IActionResult CrearProyectoConArchivo([FromForm] ProyectoCrearDTO proyectoDTO, IFormFile file)
     {
-        _proyectoService.CrearProyecto(proyecto);
-        return CreatedAtAction(nameof(ObtenerPorId), new { id = proyecto.Idproyecto }, proyecto);
+        var proyecto = _proyectoService.CrearProyectoConArchivo(proyectoDTO, file);
+        return CreatedAtAction(nameof(ObtenerPorId), new { id = proyecto.Idproyecto }, proyectoDTO);
     }
 
     [HttpPut("{id}")]
-    public IActionResult ActualizarProyecto(int id, [FromBody] Proyecto proyecto)
+    public IActionResult ActualizarProyecto(int id, [FromBody] ProyectoActualizarDTO proyectoDTO)
     {
-        if (id != proyecto.Idproyecto) return BadRequest("ID no coincide");
+        if (id != proyectoDTO.Idproyecto) return BadRequest("ID no coincide");
 
-        _proyectoService.ActualizarProyecto(proyecto);
+        _proyectoService.ActualizarProyecto(proyectoDTO);
         return NoContent();
     }
 
@@ -52,5 +53,16 @@ public class ProyectoController : Controller
     {
         _proyectoService.EliminarProyecto(id);
         return NoContent();
+    }
+    
+    [HttpGet("buscar")]
+    public IActionResult BuscarProyectos([FromQuery] string termino)
+    {
+        var proyectos = _proyectoService.BuscarProyectos(termino);
+        if (!proyectos.Any())
+        {
+            return NotFound("No se encontraron proyectos que coincidan con el término de búsqueda.");
+        }
+        return Ok(proyectos);
     }
 }

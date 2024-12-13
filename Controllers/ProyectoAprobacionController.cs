@@ -15,7 +15,7 @@ public class ProyectoAprobacionController : Controller
     {
         _proyectoAprobacionService = proyectoAprobacionService;
     }
-    [Authorize(Policy = "EsRevisor")]
+    
     [HttpPut("aprobar")]
     public IActionResult AprobarProyecto([FromBody] ProyectoAprobacionDTO aprobacionDTO)
     {
@@ -30,7 +30,6 @@ public class ProyectoAprobacionController : Controller
         }
     }
     
-    [Authorize(Policy = "EsRevisor")]
     [HttpGet("pendientes")]
     public IActionResult ObtenerProyectosPendientes()
     {
