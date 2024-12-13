@@ -7,23 +7,27 @@ using Microsoft.EntityFrameworkCore;
 namespace ProyectoFinal.Models;
 
 [Table("Usuario")]
-[Index("Correo", Name = "UQ__Usuario__60695A191D5A1BC0", IsUnique = true)]
+[Index("Correo", Name = "UQ__Usuario__60695A19794B62C6", IsUnique = true)]
 public partial class Usuario
 {
     [Key]
     [Column("IDUsuario")]
     public int Idusuario { get; set; }
 
+    [Required]
     [StringLength(255)]
-    public string NombreCompleto { get; set; } = null!;
+    public string NombreCompleto { get; set; }
 
+    [Required]
     [StringLength(255)]
-    public string Correo { get; set; } = null!;
+    public string Correo { get; set; }
 
-    public string Contraseña { get; set; } = null!;
+    [Required]
+    public string Contraseña { get; set; }
 
+    [Required]
     [StringLength(50)]
-    public string Rol { get; set; } = null!;
+    public string Rol { get; set; }
 
     [InverseProperty("IdusuarioNavigation")]
     public virtual ICollection<Notificacion> Notificacions { get; } = new List<Notificacion>();
@@ -33,5 +37,4 @@ public partial class Usuario
 
     [InverseProperty("IdusuarioNavigation")]
     public virtual ICollection<Proyecto> ProyectoIdusuarioNavigations { get; } = new List<Proyecto>();
-    public ICollection<Notificacion> Notificaciones { get; set; } = new List<Notificacion>();
 }

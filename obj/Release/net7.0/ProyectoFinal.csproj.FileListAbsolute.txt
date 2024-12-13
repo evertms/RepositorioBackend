@@ -1,0 +1,8 @@
+C:\Users\USER\Desktop\RepositorioBackend\obj\Release\net7.0\ProyectoFinal.csproj.AssemblyReference.cache
+C:\Users\USER\Desktop\RepositorioBackend\obj\Release\net7.0\ProyectoFinal.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\USER\Desktop\RepositorioBackend\obj\Release\net7.0\ProyectoFinal.AssemblyInfoInputs.cache
+C:\Users\USER\Desktop\RepositorioBackend\obj\Release\net7.0\ProyectoFinal.AssemblyInfo.cs
+C:\Users\USER\Desktop\RepositorioBackend\obj\Release\net7.0\ProyectoFinal.csproj.CoreCompileInputs.cache
+C:\Users\USER\Desktop\RepositorioBackend\obj\Release\net7.0\ProyectoFinal.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\USER\Desktop\RepositorioBackend\obj\Release\net7.0\ProyectoFinal.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\USER\Desktop\RepositorioBackend\obj\Release\net7.0\ProyectoFinal.sourcelink.json

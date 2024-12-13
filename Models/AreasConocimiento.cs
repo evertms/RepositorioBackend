@@ -7,15 +7,16 @@ using Microsoft.EntityFrameworkCore;
 namespace ProyectoFinal.Models;
 
 [Table("AreasConocimiento")]
-[Index("NombreArea", Name = "UQ__AreasCon__D5E8EEB5D70ABFD4", IsUnique = true)]
+[Index("NombreArea", Name = "UQ__AreasCon__D5E8EEB578CDC67B", IsUnique = true)]
 public partial class AreasConocimiento
 {
     [Key]
     [Column("IDArea")]
     public int Idarea { get; set; }
 
+    [Required]
     [StringLength(255)]
-    public string NombreArea { get; set; } = null!;
+    public string NombreArea { get; set; }
 
     [ForeignKey("Idarea")]
     [InverseProperty("Idareas")]

@@ -13,11 +13,13 @@ public partial class Participante
     [Column("IDParticipante")]
     public int Idparticipante { get; set; }
 
+    [Required]
     [StringLength(255)]
-    public string NombreCompleto { get; set; } = null!;
+    public string NombreCompleto { get; set; }
 
+    [Required]
     [StringLength(255)]
-    public string Carrera { get; set; } = null!;
+    public string Carrera { get; set; }
 
     [ForeignKey("Idparticipante")]
     [InverseProperty("Idparticipantes")]

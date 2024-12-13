@@ -13,28 +13,33 @@ public partial class Proyecto
     [Column("IDProyecto")]
     public int Idproyecto { get; set; }
 
+    [Required]
     [StringLength(255)]
-    public string Titulo { get; set; } = null!;
+    public string Titulo { get; set; }
 
-    public string Resumen { get; set; } = null!;
+    [Required]
+    public string Resumen { get; set; }
 
     [StringLength(255)]
-    public string? EnlaceRepositorio { get; set; }
+    public string EnlaceRepositorio { get; set; }
 
+    [Required]
     [Column("DocumentoPDF")]
     [StringLength(255)]
-    public string DocumentoPdf { get; set; } = null!;
+    public string DocumentoPdf { get; set; }
 
+    [Required]
     [StringLength(50)]
-    public string Estado { get; set; } = null!;
+    public string Estado { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime? FechaSubida { get; set; }
 
+    [Required]
     [StringLength(50)]
-    public string EstatusAprobacion { get; set; } = null!;
+    public string EstatusAprobacion { get; set; }
 
-    public string? ComentarioAprobacion { get; set; }
+    public string ComentarioAprobacion { get; set; }
 
     [Column("IDUsuario")]
     public int Idusuario { get; set; }
@@ -47,15 +52,15 @@ public partial class Proyecto
 
     [ForeignKey("Idadministrador")]
     [InverseProperty("ProyectoIdadministradorNavigations")]
-    public virtual Usuario? IdadministradorNavigation { get; set; }
+    public virtual Usuario IdadministradorNavigation { get; set; }
 
     [ForeignKey("Idtipo")]
     [InverseProperty("Proyectos")]
-    public virtual TiposTrabajo IdtipoNavigation { get; set; } = null!;
+    public virtual TiposTrabajo IdtipoNavigation { get; set; }
 
     [ForeignKey("Idusuario")]
     [InverseProperty("ProyectoIdusuarioNavigations")]
-    public virtual Usuario IdusuarioNavigation { get; set; } = null!;
+    public virtual Usuario IdusuarioNavigation { get; set; }
 
     [ForeignKey("Idproyecto")]
     [InverseProperty("Idproyectos")]

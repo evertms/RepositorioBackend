@@ -16,10 +16,12 @@ public partial class Notificacion
     [Column("IDUsuario")]
     public int? Idusuario { get; set; }
 
+    [Required]
     [StringLength(50)]
-    public string RolReceptor { get; set; } = null!;
+    public string RolReceptor { get; set; }
 
-    public string Mensaje { get; set; } = null!;
+    [Required]
+    public string Mensaje { get; set; }
 
     [Column(TypeName = "datetime")]
     public DateTime FechaCreacion { get; set; }
@@ -28,5 +30,5 @@ public partial class Notificacion
 
     [ForeignKey("Idusuario")]
     [InverseProperty("Notificacions")]
-    public virtual Usuario? IdusuarioNavigation { get; set; }
+    public virtual Usuario IdusuarioNavigation { get; set; }
 }
