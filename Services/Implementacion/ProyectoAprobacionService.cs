@@ -22,20 +22,44 @@ public class ProyectoAprobacionService : IProyectoAprobacionService
             throw new Exception("Proyecto no encontrado.");
         }
 
-        if (proyecto.EstatusAprobacion != "Pendiente")
+        if (aprobacionDTO.RolAprobador == "Revisor")
         {
-            throw new Exception("El proyecto ya fue revisado.");
+            if (aprobacionDTO.EstatusAprobacion == "Aprobado")
+            {
+                proyecto.EstatusAprobacion = "Parcialmente aprobado";
+            }
+            else
+            {
+                proyecto.EstatusAprobacion = aprobacionDTO.EstatusAprobacion;
+            }
+        }
+        
+        else if (aprobacionDTO.RolAprobador == "Administrador")
+        {
+            if (aprobacionDTO.EstatusAprobacion == "Aprobado")
+            {
+                proyecto.EstatusAprobacion = "Aprobado";
+            }
+            else
+            {
+                proyecto.EstatusAprobacion = "Pendiente";
+            }
         }
 
-        proyecto.EstatusAprobacion = aprobacionDTO.EstatusAprobacion;
         proyecto.ComentarioAprobacion = aprobacionDTO.ComentariosAprobacion;
-        proyecto.Idadministrador = aprobacionDTO.IDAdministrador;
-
         _context.SaveChanges();
     }
 
     public IEnumerable<Proyecto> ObtenerProyectosPendientes()
     {
         return _context.Proyectos.Where(p => p.EstatusAprobacion == "Pendiente").ToList();
+    }
+
+    public IEnumerable<Proyecto> ObtenerProyectosParcialmenteAprobados()
+    {
+        var projs = _context.Proyectos
+            .Where(p => p.EstatusAprobacion.ToLower() == "Parcialmente aprobado")
+            .ToList();
+        return projs;
     }
 }

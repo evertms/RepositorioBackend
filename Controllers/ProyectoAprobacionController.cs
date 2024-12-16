@@ -37,4 +37,11 @@ public class ProyectoAprobacionController : Controller
         var proyectosPendientes = _proyectoAprobacionService.ObtenerProyectosPendientes();
         return Ok(proyectosPendientes);
     }
+    
+    [HttpGet("parcialmente-aprobados")]
+    public IActionResult ObtenerParcialMenteAprobados()
+    {
+        var projsParcialmenteAprobados = _proyectoAprobacionService.ObtenerProyectosParcialmenteAprobados();
+        return Ok(projsParcialmenteAprobados);
+    }
 }

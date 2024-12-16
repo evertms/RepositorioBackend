@@ -7,4 +7,5 @@ public interface IProyectoAprobacionService
 {
     void AprobarProyecto(ProyectoAprobacionDTO aprobacionDTO);
     IEnumerable<Proyecto> ObtenerProyectosPendientes();
+    IEnumerable<Proyecto> ObtenerProyectosParcialmenteAprobados();
 }
