@@ -1,14 +1,13 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProyectoFinal.Models.DTO;
-using ProyectoFinal.Services;
 using ProyectoFinal.Services.Contrato;
 
 namespace ProyectoFinal.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class ProyectoAprobacionController : Controller
+public class ProyectoAprobacionController : ControllerBase
 {
     private readonly IProyectoAprobacionService _proyectoAprobacionService;
 
@@ -20,10 +19,16 @@ public class ProyectoAprobacionController : Controller
     [HttpPut("aprobar")]
     public IActionResult AprobarProyecto([FromBody] ProyectoAprobacionDTO aprobacionDTO)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
         try
         {
             _proyectoAprobacionService.AprobarProyecto(aprobacionDTO);
-            return Ok(new { mensaje = "El proyecto ha sido actualizado exitosamente." });
+            var proyectoActualizado = _proyectoAprobacionService.ObtenerProyectoPorId(aprobacionDTO.IdProyecto);
+            return Ok(proyectoActualizado);
         }
         catch (Exception ex)
         {
@@ -36,5 +41,12 @@ public class ProyectoAprobacionController : Controller
     {
         var proyectosPendientes = _proyectoAprobacionService.ObtenerProyectosPendientes();
         return Ok(proyectosPendientes);
+    }
+    
+    [HttpGet("parcialmente-aprobados")]
+    public IActionResult ObtenerPorAprobar()
+    {
+        var projsParcialmenteAprobados = _proyectoAprobacionService.ObtenerProyectosPorAprobar();
+        return Ok(projsParcialmenteAprobados);
     }
 }

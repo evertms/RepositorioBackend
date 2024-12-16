@@ -22,20 +22,57 @@ public class ProyectoAprobacionService : IProyectoAprobacionService
             throw new Exception("Proyecto no encontrado.");
         }
 
-        if (proyecto.EstatusAprobacion != "Pendiente")
+        if (aprobacionDTO.RolAprobador == "Revisor")
         {
-            throw new Exception("El proyecto ya fue revisado.");
+            if (aprobacionDTO.EstatusAprobacion == "Aprobado")
+            {
+                proyecto.EstatusAprobacion = "Parcialmente aprobado";
+            }
+            else
+            {
+                proyecto.EstatusAprobacion = aprobacionDTO.EstatusAprobacion;
+            }
+        }
+        
+        else if (aprobacionDTO.RolAprobador == "Administrador")
+        {
+            if (aprobacionDTO.EstatusAprobacion == "Aprobado")
+            {
+                proyecto.EstatusAprobacion = "Aprobado";
+            }
+            else
+            {
+                proyecto.EstatusAprobacion = "Pendiente";
+            }
         }
 
-        proyecto.EstatusAprobacion = aprobacionDTO.EstatusAprobacion;
         proyecto.ComentarioAprobacion = aprobacionDTO.ComentariosAprobacion;
-        proyecto.Idadministrador = aprobacionDTO.IDAdministrador;
-
         _context.SaveChanges();
     }
 
     public IEnumerable<Proyecto> ObtenerProyectosPendientes()
     {
-        return _context.Proyectos.Where(p => p.EstatusAprobacion == "Pendiente").ToList();
+        return _context.Proyectos.Where(p => p.EstatusAprobacion.ToLower()== "pendiente").ToList();
     }
+
+    public IEnumerable<Proyecto> ObtenerProyectosPorAprobar()
+    {
+        var projs = _context.Proyectos
+            .Where(p => p.EstatusAprobacion.ToLower() == "parcialmente aprobado")
+            .ToList();
+        return projs;
+    }
+    
+    private readonly List<Proyecto> _proyectos = new List<Proyecto>();
+
+    public Proyecto ObtenerProyectoPorId(int idProyecto)
+    {
+        var proyecto = _proyectos.FirstOrDefault(p => p.Idproyecto == idProyecto);
+        if (proyecto == null)
+        {
+            throw new Exception("El proyecto no existe.");
+        }
+        return proyecto;
+    }
+
 }

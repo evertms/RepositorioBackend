@@ -52,13 +52,13 @@ app.UseCors("AllowFrontend");
 
 app.UseStaticFiles(new StaticFileOptions
 {
-    FileProvider = new PhysicalFileProvider(@"C:\Users\USER\Desktop\RepositorioBackend"),
+    FileProvider = new PhysicalFileProvider(@"C:\Users\USER\Desktop\RepositorioBackend\uploads"),
     RequestPath = "/uploads"
 });
 
 app.UseStaticFiles(new StaticFileOptions
 {
-    FileProvider = new PhysicalFileProvider(@"C:\Users\USER\Desktop\RepositorioBackend"),
+    FileProvider = new PhysicalFileProvider(@"C:\Users\USER\Desktop\RepositorioBackend\uploads"),
     RequestPath = "/uploads"
 });
 
