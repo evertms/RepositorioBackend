@@ -1,11 +1,9 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
 using ProyectoFinal.Context;
 using ProyectoFinal.Models;
+using ProyectoFinal.Models.DTO;
+using ProyectoFinal.Services.Contrato;
 
-namespace ProyectoFinal.Services;
+namespace ProyectoFinal.Services.Implementacion;
 
 public class UsuarioService : IUsuarioService
 {
@@ -16,16 +14,23 @@ public class UsuarioService : IUsuarioService
         _context = context;
     }
 
-    public Usuario RegistrarUsuario(Usuario usuario)
+    public Usuario RegistrarUsuario(UsuarioRegistroDTO usuario)
     {
         if (_context.Usuarios.Any(u => u.Correo == usuario.Correo))
         {
             throw new Exception("El correo ya está registrado.");
         }
-        
-        _context.Usuarios.Add(usuario);
+
+        var newUser = new Usuario
+        {
+            NombreCompleto = usuario.NombreCompleto,
+            Correo = usuario.Correo,
+            Contraseña = usuario.Contrasena,
+            Rol = usuario.Rol,
+        };
+        _context.Usuarios.Add(newUser);
         _context.SaveChanges();
-        return usuario;
+        return newUser;
     }
 
     public Usuario ActualizarUsuario(Usuario usuario)

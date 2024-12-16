@@ -34,7 +34,7 @@ public partial class Proyecto
     [StringLength(50)]
     public string EstatusAprobacion { get; set; } = null!;
 
-    public string? ComentarioAprobacion { get; set; }
+    public string ComentarioAprobacion { get; set; }
 
     [Column("IDUsuario")]
     public int Idusuario { get; set; }

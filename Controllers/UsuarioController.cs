@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProyectoFinal.Models;
 using ProyectoFinal.Models.DTO;
 using ProyectoFinal.Services;
+using ProyectoFinal.Services.Contrato;
 
 namespace ProyectoFinal.Controllers;
 
@@ -19,25 +20,19 @@ public class UsuarioController : Controller
     [HttpPost("registro")]
     public IActionResult Registrar([FromBody] UsuarioRegistroDTO usuarioDTO)
     {
+        if (usuarioDTO == null ||
+            string.IsNullOrEmpty(usuarioDTO.NombreCompleto) ||
+            string.IsNullOrEmpty(usuarioDTO.Correo) ||
+            string.IsNullOrEmpty(usuarioDTO.Contrasena) ||
+            string.IsNullOrEmpty(usuarioDTO.Rol))
+        {
+            return BadRequest("No pueden haber campos vacíos.");
+        }
+
         try
         {
-            // Convertir el DTO al modelo interno
-            var nuevoUsuario = new Usuario
-            {
-                NombreCompleto = usuarioDTO.NombreCompleto,
-                Correo = usuarioDTO.Correo,
-                Contraseña = usuarioDTO.Contraseña,
-                Rol = usuarioDTO.Rol
-            };
-
-            var usuarioRegistrado = _usuarioService.RegistrarUsuario(nuevoUsuario);
-            return Ok(new
-            {
-                usuarioRegistrado.Idusuario,
-                usuarioRegistrado.NombreCompleto,
-                usuarioRegistrado.Correo,
-                usuarioRegistrado.Rol
-            });
+            var usuarioRegistrado = _usuarioService.RegistrarUsuario(usuarioDTO);
+            return Ok(usuarioRegistrado);
         }
         catch (Exception ex)
         {
@@ -62,7 +57,7 @@ public class UsuarioController : Controller
         }
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("delete/{id}")]
     public IActionResult Eliminar(int id)
     {
         try

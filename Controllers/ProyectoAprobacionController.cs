@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProyectoFinal.Models.DTO;
 using ProyectoFinal.Services;
+using ProyectoFinal.Services.Contrato;
 
 namespace ProyectoFinal.Controllers;
 

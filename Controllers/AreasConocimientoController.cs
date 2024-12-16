@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using ProyectoFinal.Models;
 using ProyectoFinal.Services;
+using ProyectoFinal.Services.Contrato;
 
 namespace ProyectoFinal.Controllers;
 

@@ -73,3 +73,5 @@ C:\Users\evert\RiderProjects\ProyectoFinal\ProyectoFinal\obj\Debug\net7.0\Proyec
 C:\Users\evert\RiderProjects\ProyectoFinal\ProyectoFinal\obj\Debug\net7.0\ProyectoFinal.sourcelink.json
 C:\Users\evert\RiderProjects\ProyectoFinal\ProyectoFinal\bin\Debug\net7.0\PdfiumViewer.dll
 C:\Users\evert\RiderProjects\ProyectoFinal\ProyectoFinal\bin\Debug\net7.0\nl\PdfiumViewer.resources.dll
+C:\Users\evert\RiderProjects\ProyectoFinal\ProyectoFinal\bin\Debug\net7.0\Castle.Core.dll
+C:\Users\evert\RiderProjects\ProyectoFinal\ProyectoFinal\bin\Debug\net7.0\Moq.dll

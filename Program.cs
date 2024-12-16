@@ -1,8 +1,11 @@
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using ProyectoFinal.Context;
 using ProyectoFinal.Models;
 using ProyectoFinal.Services;
+using ProyectoFinal.Services.Contrato;
+using ProyectoFinal.Services.Implementacion;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +33,15 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<INotificacionService, NotificacionService>();
 builder.Services.AddScoped<IAreasConocimientoService, AreasConocimientoService>();
 builder.Services.AddScoped<ITiposTrabajoService, TiposTrabajoService>();
+builder.Services.Configure<IISServerOptions>(options =>
+{
+    options.MaxRequestBodySize = int.MaxValue; // Tamaño máximo permitido
+});
+
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 50 * 1024 * 1024; // 50 MB
+});
 //builder.Services.AddHostedService<RecordatorioRevisoresService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

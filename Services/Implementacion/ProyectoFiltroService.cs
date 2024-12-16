@@ -2,8 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using ProyectoFinal.Context;
 using ProyectoFinal.Models;
 using ProyectoFinal.Models.DTO;
+using ProyectoFinal.Services.Contrato;
 
-namespace ProyectoFinal.Services;
+namespace ProyectoFinal.Services.Implementacion;
 
 public class ProyectoFiltroService : IProyectoFiltroService
 {

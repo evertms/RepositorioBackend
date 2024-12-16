@@ -1,7 +1,8 @@
+using System.Runtime.InteropServices.ComTypes;
 using ProyectoFinal.Models;
 using ProyectoFinal.Models.DTO;
 
-namespace ProyectoFinal.Services;
+namespace ProyectoFinal.Services.Contrato;
 
 public interface IProyectoService
 {
@@ -11,4 +12,6 @@ public interface IProyectoService
     void ActualizarProyecto(ProyectoActualizarDTO proyecto);
     void EliminarProyecto(int id);
     IEnumerable<Proyecto> BuscarProyectos(string terminoBusqueda);
+    IEnumerable<Proyecto> ObtenerProyectosPorUsuario(int idUsuario);
+    IEnumerable<Proyecto> ObtenerProyectosRecientes();
 }

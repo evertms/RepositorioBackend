@@ -1,7 +1,7 @@
 using ProyectoFinal.Models;
 using ProyectoFinal.Models.DTO;
 
-namespace ProyectoFinal.Services;
+namespace ProyectoFinal.Services.Contrato;
 
 public interface INotificacionService
 {

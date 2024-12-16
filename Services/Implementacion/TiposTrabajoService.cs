@@ -1,7 +1,8 @@
 using ProyectoFinal.Context;
 using ProyectoFinal.Models;
+using ProyectoFinal.Services.Contrato;
 
-namespace ProyectoFinal.Services;
+namespace ProyectoFinal.Services.Implementacion;
 
 public class TiposTrabajoService : ITiposTrabajoService
 {

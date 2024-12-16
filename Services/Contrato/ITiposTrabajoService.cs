@@ -1,6 +1,6 @@
 using ProyectoFinal.Models;
 
-namespace ProyectoFinal.Services;
+namespace ProyectoFinal.Services.Contrato;
 
 public interface ITiposTrabajoService
 {

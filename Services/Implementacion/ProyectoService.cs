@@ -1,8 +1,9 @@
 using ProyectoFinal.Context;
 using ProyectoFinal.Models;
 using ProyectoFinal.Models.DTO;
+using ProyectoFinal.Services.Contrato;
 
-namespace ProyectoFinal.Services;
+namespace ProyectoFinal.Services.Implementacion;
 
 public class ProyectoService : IProyectoService
 {
@@ -30,31 +31,31 @@ public class ProyectoService : IProyectoService
             throw new ArgumentException("El documento no puede ser nulo.");
         }
 
-        /*if (archivo == null)
+        if (archivo == null || archivo.Length == 0)
         {
             throw new ArgumentException("El archivo no puede estar vacío.");
-        }*/
+        }
 
         if (Path.GetExtension(archivo.FileName).ToLower() != ".pdf")
         {
             throw new ArgumentException("Solo se permiten archivos PDF.");
         }
-        
-        // Guardar el archivo en la carpeta especificada
+
+        Console.WriteLine(Directory.GetCurrentDirectory());
         var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
         if (!Directory.Exists(uploadsFolder))
             Directory.CreateDirectory(uploadsFolder);
-        
-        var fileName = Path.GetFileNameWithoutExtension(archivo.FileName)
+
+        var fileNameParcial = Path.GetFileNameWithoutExtension(archivo.FileName)
             .Replace(" ", "_")
             .Replace("á", "a")
             .Replace("é", "e")
             .Replace("í", "i")
             .Replace("ó", "o")
-            .Replace("ú", "u")+ Path.GetExtension(archivo.FileName);
-        
+            .Replace("ú", "u");
+        var extension = Path.GetExtension(archivo.FileName);
+        var fileName = $"{fileNameParcial}_{DateTime.Now:yyyyMMddHHmmss}{extension}";
         var filePath = Path.Combine(uploadsFolder, fileName);
-
         using (var stream = new FileStream(filePath, FileMode.Create))
         {
             archivo.CopyTo(stream);
@@ -66,9 +67,37 @@ public class ProyectoService : IProyectoService
             EnlaceRepositorio = proyectoDTO.EnlaceRepositorio,
             DocumentoPdf = $"/uploads/{fileName}",
             Estado = proyectoDTO.Estado,
+            Idtipo =  proyectoDTO.IdTipoTrabajo,
             FechaSubida = DateTime.Now, // Asignar fecha actual
-            EstatusAprobacion = "Pendiente" // Por defecto
+            EstatusAprobacion = "Pendiente", // Por defecto
+            Idusuario = proyectoDTO.IdUsuario
         };
+
+        foreach (var participanteDto in proyectoDTO.Participantes)
+        {
+            var participanteExistente = _context.Participantes
+                .FirstOrDefault(p => p.NombreCompleto.ToLower() == participanteDto.NombreCompleto.Trim().ToLower() 
+                                     && p.Carrera.ToLower() == participanteDto.Carrera.Trim().ToLower());
+            if (participanteExistente != null)
+            {
+                proyecto.Idparticipantes.Add(participanteExistente);
+                if (!participanteExistente.Idproyectos.Contains(proyecto))
+                {
+                    participanteExistente.Idproyectos.Add(proyecto);
+                }
+            }
+            else
+            {
+                var nuevoParticipante = new Participante
+                {
+                    NombreCompleto = participanteDto.NombreCompleto.Trim(),
+                    Carrera = participanteDto.Carrera.Trim()
+                };
+                nuevoParticipante.Idproyectos.Add(proyecto);
+                proyecto.Idparticipantes.Add(nuevoParticipante);
+                _context.Add(nuevoParticipante);
+            }
+        }
 
         _context.Proyectos.Add(proyecto);
         _context.SaveChanges();
@@ -103,9 +132,10 @@ public class ProyectoService : IProyectoService
     {
         if (string.IsNullOrEmpty(terminoBusqueda))
         {
-            return _context.Proyectos.ToList(); // Si no se proporciona un término, devuelve todos los proyectos
+            return _context.Proyectos
+                .Where(p => p.EstatusAprobacion.ToLower() == "aprobado")
+                .ToList(); // Si no se proporciona un término, devuelve todos los proyectos
         }
-
         terminoBusqueda = terminoBusqueda.ToLower(); // Convertir a minúsculas para búsqueda insensible a mayúsculas/minúsculas
 
         return _context.Proyectos
@@ -113,5 +143,20 @@ public class ProyectoService : IProyectoService
                         p.Resumen.ToLower().Contains(terminoBusqueda) &&
                         p.EstatusAprobacion.ToLower() == "aprobado")
              .ToList();
+    }
+    public IEnumerable<Proyecto> ObtenerProyectosPorUsuario(int idUsuario)
+    {
+        var proyectos = _context.Proyectos.Where(
+            p=> p.Idusuario == idUsuario).ToList();
+        return proyectos;
+    }
+
+    public IEnumerable<Proyecto> ObtenerProyectosRecientes()
+    {
+        var proyectos = _context.Proyectos.Where(
+            p => p.EstatusAprobacion.ToLower() == "aprobado")
+            .OrderByDescending(p => p.FechaSubida)
+            .ToList();
+        return proyectos;
     }
 }
