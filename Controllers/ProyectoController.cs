@@ -32,38 +32,43 @@ public class ProyectoController : Controller
 
         return Ok(proyecto);
     }
-
-    [HttpPost("subir")]
-    public IActionResult CrearProyectoConArchivo([FromForm] ProyectoCrearDTO proyectoDTO, [FromForm] IFormFile file)
+    
+    [HttpPost("subir-archivo")]
+    public IActionResult SubirArchivo([FromForm] IFormFile file)
     {
         try
         {
-            if (proyectoDTO == null)
-            {
-                return BadRequest("El proyecto no puede ser nulo.");
-            }
-
-            if (file == null || file.Length == 0)
-            {
-                return BadRequest("El archivo no puede estar vacío.");
-            }
-
-            var proyecto = _proyectoService.CrearProyectoConArchivo(proyectoDTO, file);
-            return CreatedAtAction(nameof(ObtenerPorId), new { id = proyecto.Idproyecto }, proyectoDTO);
+            var ruta = _proyectoService.SubirArchivo(file);
+            return Ok(new { ruta });
         }
         catch (ArgumentException ex)
         {
-            // Manejo de errores específicos
             return BadRequest(new { message = ex.Message });
         }
         catch (Exception ex)
         {
-            // Manejo de errores generales
-            return StatusCode(500, new { message = "Ocurrió un error interno al procesar la solicitud.", details = ex.Message });
+            return StatusCode(500, new { message = "Ocurrió un error interno.", details = ex.Message });
         }
-
     }
 
+    [HttpPost("crear-proyecto")]
+    public IActionResult CrearProyecto([FromBody] ProyectoCrearDTO proyectoDTO)
+    {
+        try
+        {
+            var proyecto = _proyectoService.CrearProyecto(proyectoDTO);
+            return CreatedAtAction(nameof(ObtenerPorId), new { id = proyecto.Idproyecto }, proyecto);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "Ocurrió un error interno al procesar la solicitud.", details = ex.Message });
+        }
+    }
+    
     [HttpPut("{id}")]
     public IActionResult ActualizarProyecto(int id, [FromBody] ProyectoActualizarDTO proyectoDTO)
     {

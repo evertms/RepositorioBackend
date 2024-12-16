@@ -24,13 +24,8 @@ public class ProyectoService : IProyectoService
         return _context.Proyectos.FirstOrDefault(p => p.Idproyecto == id);
     }
 
-    public Proyecto CrearProyectoConArchivo(ProyectoCrearDTO proyectoDTO, IFormFile archivo)
+    public string SubirArchivo(IFormFile archivo)
     {
-        if (proyectoDTO == null)
-        {
-            throw new ArgumentException("El documento no puede ser nulo.");
-        }
-
         if (archivo == null || archivo.Length == 0)
         {
             throw new ArgumentException("El archivo no puede estar vacío.");
@@ -41,7 +36,6 @@ public class ProyectoService : IProyectoService
             throw new ArgumentException("Solo se permiten archivos PDF.");
         }
 
-        Console.WriteLine(Directory.GetCurrentDirectory());
         var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "uploads");
         if (!Directory.Exists(uploadsFolder))
             Directory.CreateDirectory(uploadsFolder);
@@ -56,19 +50,37 @@ public class ProyectoService : IProyectoService
         var extension = Path.GetExtension(archivo.FileName);
         var fileName = $"{fileNameParcial}_{DateTime.Now:yyyyMMddHHmmss}{extension}";
         var filePath = Path.Combine(uploadsFolder, fileName);
+
         using (var stream = new FileStream(filePath, FileMode.Create))
         {
             archivo.CopyTo(stream);
         }
+
+        Console.WriteLine($".pdf subido en /uploads/{fileName}");
+        return $"/uploads/{fileName}";
+    }
+
+    public Proyecto CrearProyecto(ProyectoCrearDTO proyectoDTO)
+    {
+        if (proyectoDTO == null)
+        {
+            throw new ArgumentException("El proyecto no puede ser nulo.");
+        }
+
+        if (string.IsNullOrEmpty(proyectoDTO.DocumentoPdf))
+        {
+            throw new ArgumentException("El archivo PDF debe ser proporcionado.");
+        }
+
         var proyecto = new Proyecto
         {
             Titulo = proyectoDTO.Titulo,
             Resumen = proyectoDTO.Resumen,
             EnlaceRepositorio = proyectoDTO.EnlaceRepositorio,
-            DocumentoPdf = $"/uploads/{fileName}",
+            DocumentoPdf = proyectoDTO.DocumentoPdf, // Usar la ruta proporcionada en el DTO
             Estado = proyectoDTO.Estado,
-            Idtipo =  proyectoDTO.IdTipoTrabajo,
-            FechaSubida = DateTime.Now, // Asignar fecha actual
+            Idtipo = proyectoDTO.IdTipoTrabajo,
+            FechaSubida = DateTime.Now, // Fecha actual
             EstatusAprobacion = "Pendiente", // Por defecto
             Idusuario = proyectoDTO.IdUsuario
         };
@@ -76,7 +88,7 @@ public class ProyectoService : IProyectoService
         foreach (var participanteDto in proyectoDTO.Participantes)
         {
             var participanteExistente = _context.Participantes
-                .FirstOrDefault(p => p.NombreCompleto.ToLower() == participanteDto.NombreCompleto.Trim().ToLower() 
+                .FirstOrDefault(p => p.NombreCompleto.ToLower() == participanteDto.NombreCompleto.Trim().ToLower()
                                      && p.Carrera.ToLower() == participanteDto.Carrera.Trim().ToLower());
             if (participanteExistente != null)
             {
@@ -101,10 +113,12 @@ public class ProyectoService : IProyectoService
 
         _context.Proyectos.Add(proyecto);
         _context.SaveChanges();
+
         return proyecto;
     }
 
-    public void ActualizarProyecto(ProyectoActualizarDTO proyectoDTO)
+
+public void ActualizarProyecto(ProyectoActualizarDTO proyectoDTO)
     {
         var existente = _context.Proyectos.Find(proyectoDTO.Idproyecto);
         if (existente == null) throw new Exception("Proyecto no encontrado");

@@ -8,7 +8,8 @@ public interface IProyectoService
 {
     IEnumerable<Proyecto> ObtenerTodosAprobados();
     Proyecto ObtenerPorId(int id);
-    Proyecto CrearProyectoConArchivo(ProyectoCrearDTO proyecto, IFormFile archivo);
+    string SubirArchivo(IFormFile archivo);
+    Proyecto CrearProyecto(ProyectoCrearDTO proyecto);
     void ActualizarProyecto(ProyectoActualizarDTO proyecto);
     void EliminarProyecto(int id);
     IEnumerable<Proyecto> BuscarProyectos(string terminoBusqueda);

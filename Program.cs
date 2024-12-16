@@ -38,6 +38,14 @@ builder.Services.Configure<IISServerOptions>(options =>
     options.MaxRequestBodySize = int.MaxValue; // Tamaño máximo permitido
 });
 
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+    });
+
+
 builder.Services.Configure<FormOptions>(options =>
 {
     options.MultipartBodyLengthLimit = 50 * 1024 * 1024; // 50 MB

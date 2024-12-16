@@ -19,7 +19,7 @@ public class AreasConocimientoController : ControllerBase
     [HttpGet]
     public ActionResult<IEnumerable<AreasConocimiento>> ObtenerTodas()
     {
-        var areas = _areasConocimientoService.ObtenerTodas();
+        var areas = _areasConocimientoService.ObtenerTodas().ToList();
         return Ok(areas);
     }
 }

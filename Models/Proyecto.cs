@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 namespace ProyectoFinal.Models;
@@ -64,7 +65,8 @@ public partial class Proyecto
     [ForeignKey("Idproyecto")]
     [InverseProperty("Idproyectos")]
     public virtual ICollection<Concepto> Idconceptos { get; } = new List<Concepto>();
-
+    
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     [ForeignKey("Idproyecto")]
     [InverseProperty("Idproyectos")]
     public virtual ICollection<Participante> Idparticipantes { get; } = new List<Participante>();
