@@ -1,7 +1,8 @@
 using System.Net;
 using System.Net.Mail;
+using ProyectoFinal.Services.Contrato;
 
-namespace ProyectoFinal.Services;
+namespace ProyectoFinal.Services.Implementacion;
 
 public class EmailService : IEmailService
 {

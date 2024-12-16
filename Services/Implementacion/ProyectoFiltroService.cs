@@ -2,8 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using ProyectoFinal.Context;
 using ProyectoFinal.Models;
 using ProyectoFinal.Models.DTO;
+using ProyectoFinal.Services.Contrato;
 
-namespace ProyectoFinal.Services;
+namespace ProyectoFinal.Services.Implementacion;
 
 public class ProyectoFiltroService : IProyectoFiltroService
 {
@@ -28,11 +29,11 @@ public class ProyectoFiltroService : IProyectoFiltroService
             query = query.Where(p => p.Estado == filtro.Estado);
         }
 
-        // Filtro por estatus de aprobación
+        /*
         if (!string.IsNullOrEmpty(filtro.EstatusAprobacion))
         {
             query = query.Where(p => p.EstatusAprobacion == filtro.EstatusAprobacion);
-        }
+        }*/
 
         // Filtro por áreas de conocimiento
         if (filtro.IDAreas != null && filtro.IDAreas.Any())
@@ -47,7 +48,7 @@ public class ProyectoFiltroService : IProyectoFiltroService
         }
 
         // Filtro por rango de fechas
-        if (filtro.FechaInicio.HasValue)
+        /*if (filtro.FechaInicio.HasValue)
         {
             query = query.Where(p => p.FechaSubida >= filtro.FechaInicio.Value);
         }
@@ -55,8 +56,14 @@ public class ProyectoFiltroService : IProyectoFiltroService
         if (filtro.FechaFin.HasValue)
         {
             query = query.Where(p => p.FechaSubida <= filtro.FechaFin.Value);
+        }*/
+
+        if (!string.IsNullOrEmpty(filtro.NombreAutor))
+        {
+            query = query.Where(p => p.Idparticipantes.Any(part => part.NombreCompleto.Contains(filtro.NombreAutor)));
         }
 
+        query.Where(p => p.EstatusAprobacion.ToLower() == "aprobado");
         return query.ToList();
     }
 }

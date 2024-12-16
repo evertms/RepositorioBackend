@@ -1,8 +1,9 @@
 using ProyectoFinal.Context;
 using ProyectoFinal.Models;
 using ProyectoFinal.Models.DTO;
+using ProyectoFinal.Services.Contrato;
 
-namespace ProyectoFinal.Services;
+namespace ProyectoFinal.Services.Implementacion;
 
 public class ProyectoAprobacionService : IProyectoAprobacionService
 {
@@ -15,7 +16,7 @@ public class ProyectoAprobacionService : IProyectoAprobacionService
 
     public void AprobarProyecto(ProyectoAprobacionDTO aprobacionDTO)
     {
-        var proyecto = _context.Proyectos.Find(aprobacionDTO.IDProyecto);
+        var proyecto = _context.Proyectos.Find(aprobacionDTO.IdProyecto);
         if (proyecto == null)
         {
             throw new Exception("Proyecto no encontrado.");

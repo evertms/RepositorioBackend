@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using ProyectoFinal.Models;
+using ProyectoFinal.Models.DTO;
 using ProyectoFinal.Services;
+using ProyectoFinal.Services.Contrato;
 
 namespace ProyectoFinal.Controllers;
 
@@ -15,10 +17,10 @@ public class ProyectoController : Controller
         _proyectoService = proyectoService;
     }
 
-    [HttpGet(Name = "GetAllProyectos")]
-    public IEnumerable<Proyecto> ObtenerTodos()
+    [HttpGet("GetAllProyectos")]
+    public IEnumerable<Proyecto> ObtenerTodosLosAprobados()
     {
-        var proyectos = _proyectoService.ObtenerTodos();
+        var proyectos = _proyectoService.ObtenerTodosAprobados();
         return proyectos;
     }
 
@@ -31,19 +33,43 @@ public class ProyectoController : Controller
         return Ok(proyecto);
     }
 
-    [HttpPost]
-    public IActionResult CrearProyecto([FromBody] Proyecto proyecto)
+    [HttpPost("subir")]
+    public IActionResult CrearProyectoConArchivo([FromForm] ProyectoCrearDTO proyectoDTO, [FromForm] IFormFile file)
     {
-        _proyectoService.CrearProyecto(proyecto);
-        return CreatedAtAction(nameof(ObtenerPorId), new { id = proyecto.Idproyecto }, proyecto);
+        try
+        {
+            if (proyectoDTO == null)
+            {
+                return BadRequest("El proyecto no puede ser nulo.");
+            }
+
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("El archivo no puede estar vacío.");
+            }
+
+            var proyecto = _proyectoService.CrearProyectoConArchivo(proyectoDTO, file);
+            return CreatedAtAction(nameof(ObtenerPorId), new { id = proyecto.Idproyecto }, proyectoDTO);
+        }
+        catch (ArgumentException ex)
+        {
+            // Manejo de errores específicos
+            return BadRequest(new { message = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            // Manejo de errores generales
+            return StatusCode(500, new { message = "Ocurrió un error interno al procesar la solicitud.", details = ex.Message });
+        }
+
     }
 
     [HttpPut("{id}")]
-    public IActionResult ActualizarProyecto(int id, [FromBody] Proyecto proyecto)
+    public IActionResult ActualizarProyecto(int id, [FromBody] ProyectoActualizarDTO proyectoDTO)
     {
-        if (id != proyecto.Idproyecto) return BadRequest("ID no coincide");
+        if (id != proyectoDTO.Idproyecto) return BadRequest("ID no coincide");
 
-        _proyectoService.ActualizarProyecto(proyecto);
+        _proyectoService.ActualizarProyecto(proyectoDTO);
         return NoContent();
     }
 
@@ -52,5 +78,30 @@ public class ProyectoController : Controller
     {
         _proyectoService.EliminarProyecto(id);
         return NoContent();
+    }
+    
+    [HttpGet("buscar")]
+    public IActionResult BuscarProyectos([FromQuery] string termino)
+    {
+        var proyectos = _proyectoService.BuscarProyectos(termino);
+        if (!proyectos.Any())
+        {
+            return NotFound("No se encontraron proyectos que coincidan con el término de búsqueda.");
+        }
+        return Ok(proyectos);
+    }
+    
+    [HttpGet("mis-proyectos/{idUsuario}")]
+    public IActionResult ObtenerProyectosPorUsuario(int idUsuario)
+    {
+        var proyectos = _proyectoService.ObtenerProyectosPorUsuario(idUsuario);
+        return Ok(proyectos);
+    }
+
+    [HttpGet("recientes")]
+    public IActionResult ObtenerProyectosRecientes()
+    {
+        var proyectos = _proyectoService.ObtenerProyectosRecientes();
+        return Ok(proyectos);
     }
 }

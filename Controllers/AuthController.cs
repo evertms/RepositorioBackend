@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProyectoFinal.Models;
 using ProyectoFinal.Models.DTO;
 using ProyectoFinal.Services;
+using ProyectoFinal.Services.Contrato;
 
 namespace ProyectoFinal.Controllers;
 
@@ -30,6 +31,7 @@ public class AuthController : ControllerBase
             // Crear respuesta con DTO
             var tokenDTO = new UsuarioTokenDTO
             {
+                IdUsuario = usuarioAutenticado.Idusuario,
                 Token = token,
                 NombreCompleto = usuarioAutenticado.NombreCompleto,
                 Rol = usuarioAutenticado.Rol

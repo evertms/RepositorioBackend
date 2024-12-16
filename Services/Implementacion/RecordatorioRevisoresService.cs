@@ -1,4 +1,6 @@
-namespace ProyectoFinal.Services;
+using ProyectoFinal.Services.Contrato;
+
+namespace ProyectoFinal.Services.Implementacion;
 
 public class RecordatorioRevisoresService : BackgroundService
 {

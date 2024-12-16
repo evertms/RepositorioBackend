@@ -1,4 +1,4 @@
-namespace ProyectoFinal.Services;
+namespace ProyectoFinal.Services.Contrato;
 
 public interface IEmailService
 {
